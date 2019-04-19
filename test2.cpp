@@ -1,3 +1,4 @@
+#include <gl/glut.h>
 #include <windows.h>  // for MS Windows
 #include <GL/glut.h>  // GLUT, include glu.h and gl.h
 #include <math.h>
@@ -258,6 +259,38 @@ void processSpecialKeys(int key, int xx, int yy) {
 			break;
 	}
 }
+
+void myInit(void)
+ {
+    glClearColor(1.0,1.0,1.0,0.0);      
+    glMatrixMode(GL_PROJECTION); 
+    glLoadIdentity();
+    gluOrtho2D(0.0, 640.0, 0.0, 480.0);
+}
+
+void drawChecker(int size)
+{
+    int i = 0;
+    int j = 0;
+    for (i = 0; i < 8 ; ++i) {
+    for (j = 0; j < 8; ++j) {
+        if((i + j)%2 == 0) 
+            glColor3f( 0.4, 0.2, 0.6);
+        else
+            glColor3f( 0.2, 0.3, 0.4);
+        glRecti(i*size, j*size, (i+1)*size, (j+1)*size);    
+    }
+}
+    glFlush();
+}
+
+void checkerboard(void) {
+    glClear(GL_COLOR_BUFFER_BIT);    
+    drawChecker(32);
+
+}
+
+
 void timer(int value) {
    glutPostRedisplay();      // Post re-paint request to activate display()
    glutTimerFunc(refreshMills, timer, 0); // next timer call milliseconds later
@@ -278,20 +311,30 @@ void reshape(GLsizei width, GLsizei height) {  // GLsizei for non-negative integ
 }
 
 int main(int argc, char** argv) {
-   glutInit(&argc, argv);            // Initialize GLUT
-   glutInitDisplayMode(GLUT_DOUBLE); // Enable double buffered mode
-   glutInitWindowSize(640, 480);   // Set the window's initial width & height
-   glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
-   glutCreateWindow(title);          // Create window with the given title
-   glutDisplayFunc(display);       // Register callback handler for window re-paint event
-   glutReshapeFunc(reshape);       // Register callback handler for window re-size event
+   
+	 glutInit(&argc, argv);         
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB); 
+    glutInitWindowSize(640,480);     
+    glutInitWindowPosition(100, 150);
+    glutCreateWindow("Checker"); 
+    glutDisplayFunc(checkerboard);     
+    myInit();                   
+    glutMainLoop();           
+
+	/*glutInit(&argc, argv);           
+   glutInitDisplayMode(GLUT_DOUBLE);
+   glutInitWindowSize(640, 480);   
+   glutInitWindowPosition(50, 50); 
+   glutCreateWindow(title);          
+   glutDisplayFunc(display);       
+   glutReshapeFunc(reshape);      
 
 	glutSpecialFunc(processSpecialKeys);
 	glEnable(GL_DEPTH_TEST);
    
-   initGL();                       // Our own OpenGL initialization
-   glutTimerFunc(0, timer, 0);     // First timer call immediately [NEW]
-   glutMainLoop();                 // Enter the infinite event-processing loop
+   initGL();                       
+   glutTimerFunc(0, timer, 0);    
+   glutMainLoop();                 
   
-   return 1;
+   return 1;*/
 }
